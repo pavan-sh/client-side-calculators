@@ -7,6 +7,7 @@ import { emiCalculator } from './emi'
 import { ageCalculator } from './age'
 import { salaryHikeCalculator } from './salary-hike'
 import { shareAveragePriceCalculator } from './share-average-price'
+import { pregnancyCalculator } from './pregnancy'
 
 export const calculators = [
   bmiCalculator,
@@ -15,6 +16,7 @@ export const calculators = [
   ageCalculator,
   salaryHikeCalculator,
   shareAveragePriceCalculator,
+  pregnancyCalculator,
 ] as const
 
 export const calculatorsBySlug: Record<string, CalculatorDefinition<z.ZodTypeAny>> =
