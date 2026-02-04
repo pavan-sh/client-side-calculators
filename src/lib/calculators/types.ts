@@ -26,7 +26,13 @@ export type SelectField = FieldBase & {
   options: Array<{ label: string; value: string }>
 }
 
-export type Field = NumberField | SelectField
+export type DateField = FieldBase & {
+  type: 'date'
+  min?: string
+  max?: string
+}
+
+export type Field = NumberField | SelectField | DateField
 
 export type CalculatorDefinition<Schema extends z.ZodTypeAny> = {
   id: string

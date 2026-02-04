@@ -44,6 +44,21 @@ function FieldControl({
     )
   }
 
+  if (field.type === 'date') {
+    return (
+      <Input
+        id={id}
+        aria-describedby={describedBy}
+        type="date"
+        value={value ?? ''}
+        min={field.min}
+        max={field.max}
+        onChange={(e) => onChange(e.target.value)}
+        disabled={disabled}
+      />
+    )
+  }
+
   return (
     <Input
       id={id}
@@ -70,16 +85,10 @@ function isHiddenByUnit(calcId: string, unit: string | undefined, fieldKey: stri
 
 export function CalculatorPage({ slug }: { slug: string }) {
   const calc = calculatorsBySlug[slug]
-  if (!calc) {
-    return (
-      <div className="mx-auto max-w-3xl">
-        <p className="text-sm text-muted-foreground">Calculator not found.</p>
-      </div>
-    )
-  }
   const reactId = useId()
 
   const defaults: FormValues = useMemo(() => {
+    if (!calc) return {}
     const d: FormValues = {}
     for (const f of calc.fields) {
       if (f.type === 'select') d[f.key] = f.options[0]?.value
@@ -90,6 +99,7 @@ export function CalculatorPage({ slug }: { slug: string }) {
   const [values, setValues] = useState<FormValues>(defaults)
 
   const parsed = useMemo(() => {
+    if (!calc) return { ok: false as const, error: new Error('Calculator not found') }
     try {
       return { ok: true as const, value: calc.schema.parse(values) }
     } catch (e) {
@@ -98,9 +108,18 @@ export function CalculatorPage({ slug }: { slug: string }) {
   }, [calc, values])
 
   const output = useMemo(() => {
+    if (!calc) return null
     if (!parsed.ok) return null
     return calc.compute(parsed.value)
   }, [parsed, calc])
+
+  if (!calc) {
+    return (
+      <div className="mx-auto max-w-3xl">
+        <p className="text-sm text-muted-foreground">Calculator not found.</p>
+      </div>
+    )
+  }
 
   const unit = values.unit
 
