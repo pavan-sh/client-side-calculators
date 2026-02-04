@@ -47,6 +47,19 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="rounded-xl border bg-card p-6">
+        <h2 className="text-xl font-semibold">Not everything needs AI</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Calculations are deterministic. Running them on your device is faster, private, and avoids unnecessary server work.
+        </p>
+        <ul className="mt-4 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
+          <li>• No prompts. No API calls. No waiting.</li>
+          <li>• Works offline once loaded.</li>
+          <li>• Your inputs stay on your device.</li>
+          <li>• Lower compute = lower cost and footprint.</li>
+        </ul>
+      </section>
+
       <footer className="mt-12 border-t pt-6 text-sm text-muted-foreground">
         Built for speed and accessibility.
       </footer>

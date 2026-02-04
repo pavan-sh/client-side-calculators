@@ -4,11 +4,12 @@ import type { CalculatorDefinition } from './types'
 
 const isoDateRegex = /^\d{4}-\d{2}-\d{2}$/
 
+// Accept the browser date input value; be permissive here and validate in parseIsoDate.
 const dateString = z
   .preprocess((v) => {
     if (v === '' || v == null) return undefined
-    return v
-  }, z.string().regex(isoDateRegex, 'Use YYYY-MM-DD'))
+    return String(v)
+  }, z.string())
   .optional()
 
 const schema = z.object({
