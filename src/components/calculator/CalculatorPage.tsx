@@ -5,7 +5,13 @@ import { useId, useMemo, useState } from 'react'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Select } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import type { Field } from '@/lib/calculators/types'
 import { calculatorsBySlug } from '@/lib/calculators/registry'
 
@@ -27,19 +33,20 @@ function FieldControl({
   disabled?: boolean
 }) {
   if (field.type === 'select') {
+    const currentValue = value ?? field.options[0]?.value ?? ''
+
     return (
-      <Select
-        id={id}
-        aria-describedby={describedBy}
-        value={value ?? field.options[0]?.value ?? ''}
-        onChange={(e) => onChange(e.target.value)}
-        disabled={disabled}
-      >
-        {field.options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
+      <Select value={currentValue} onValueChange={onChange} disabled={disabled}>
+        <SelectTrigger id={id} aria-describedby={describedBy}>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {field.options.map((o) => (
+            <SelectItem key={o.value} value={o.value}>
+              {o.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
       </Select>
     )
   }

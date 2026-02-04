@@ -1,4 +1,5 @@
 import { CalculatorPage } from '@/components/calculator/CalculatorPage'
+import { ShareAveragePricePage } from '@/components/calculator/ShareAveragePricePage'
 import { calculators } from '@/lib/calculators/registry'
 
 export function generateStaticParams() {
@@ -13,7 +14,11 @@ export default async function CalculatorRoute({
   const { slug } = await params
   return (
     <main className="px-4 py-12">
-      <CalculatorPage slug={slug} />
+      {slug === 'share-average-price' ? (
+        <ShareAveragePricePage slug={slug} />
+      ) : (
+        <CalculatorPage slug={slug} />
+      )}
     </main>
   )
 }
