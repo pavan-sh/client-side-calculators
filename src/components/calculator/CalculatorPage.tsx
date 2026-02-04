@@ -105,6 +105,7 @@ export function CalculatorPage({ slug }: { slug: string }) {
 
   const [values, setValues] = useState<FormValues>(defaults)
 
+
   const parsed = useMemo(() => {
     if (!calc) return { ok: false as const, error: new Error('Calculator not found') }
     try {
@@ -148,9 +149,19 @@ export function CalculatorPage({ slug }: { slug: string }) {
 
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
-          <CardHeader>
-            <CardTitle>Inputs</CardTitle>
-            <CardDescription>Adjust values to update results instantly.</CardDescription>
+          <CardHeader className="flex flex-row items-start justify-between gap-4">
+            <div className="space-y-1">
+              <CardTitle>Inputs</CardTitle>
+              <CardDescription>Adjust values to update results instantly.</CardDescription>
+            </div>
+            <button
+              type="button"
+              className="inline-flex h-9 items-center justify-center rounded-md border bg-background px-3 text-sm font-medium shadow-sm transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background"
+              onClick={() => setValues(defaults)}
+              disabled={Object.keys(values).length === 0}
+            >
+              Clear
+            </button>
           </CardHeader>
           <CardContent className="space-y-4">
             {calc.fields.map((field) => {

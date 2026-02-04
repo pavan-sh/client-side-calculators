@@ -15,6 +15,38 @@ export default function Home() {
         </p>
       </header>
 
+      <section className="mb-10 rounded-xl border bg-card p-6">
+        <h2 className="text-xl font-semibold">
+          The computer is already in your pocket.
+        </h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Simple calculations should be instant, private, and reliable — not a chat with a server.
+        </p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+          <div className="rounded-lg border bg-background p-4">
+            <p className="text-xs text-muted-foreground">AI / API calls</p>
+            <p className="mt-1 text-lg font-semibold">0</p>
+          </div>
+          <div className="rounded-lg border bg-background p-4">
+            <p className="text-xs text-muted-foreground">Data sent</p>
+            <p className="mt-1 text-lg font-semibold">0</p>
+          </div>
+          <div className="rounded-lg border bg-background p-4">
+            <p className="text-xs text-muted-foreground">Estimated CO₂ avoided</p>
+            <p className="mt-1 text-lg font-semibold">~0.2–2g</p>
+            <p className="mt-1 text-[11px] text-muted-foreground">
+              Order-of-magnitude only; varies by model/provider/energy mix.
+            </p>
+          </div>
+        </div>
+        <ul className="mt-4 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
+          <li>• No prompts. No tokens. No waiting.</li>
+          <li>• Works offline once loaded.</li>
+          <li>• Your inputs stay on your device.</li>
+          <li>• Less compute, less cost, less drama.</li>
+        </ul>
+      </section>
+
       <section aria-labelledby="start-here" className="space-y-4">
         <div>
           <h2 id="start-here" className="text-xl font-semibold">
@@ -45,19 +77,6 @@ export default function Home() {
             </Card>
           ))}
         </div>
-      </section>
-
-      <section className="rounded-xl border bg-card p-6">
-        <h2 className="text-xl font-semibold">Not everything needs AI</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Calculations are deterministic. Running them on your device is faster, private, and avoids unnecessary server work.
-        </p>
-        <ul className="mt-4 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
-          <li>• No prompts. No API calls. No waiting.</li>
-          <li>• Works offline once loaded.</li>
-          <li>• Your inputs stay on your device.</li>
-          <li>• Lower compute = lower cost and footprint.</li>
-        </ul>
       </section>
 
       <footer className="mt-12 border-t pt-6 text-sm text-muted-foreground">
