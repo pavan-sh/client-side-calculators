@@ -2,12 +2,12 @@
 
 import Link from 'next/link'
 import { useId, useMemo, useState } from 'react'
-import { z } from 'zod'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
-import type { CalculatorDefinition, Field } from '@/lib/calculators/types'
+import type { Field } from '@/lib/calculators/types'
+import { calculatorsBySlug } from '@/lib/calculators/registry'
 
 type FormValues = Record<string, string | undefined>
 
@@ -68,11 +68,15 @@ function isHiddenByUnit(calcId: string, unit: string | undefined, fieldKey: stri
   return false
 }
 
-export function CalculatorPage({
-  calc,
-}: {
-  calc: CalculatorDefinition<z.ZodTypeAny>
-}) {
+export function CalculatorPage({ slug }: { slug: string }) {
+  const calc = calculatorsBySlug[slug]
+  if (!calc) {
+    return (
+      <div className="mx-auto max-w-3xl">
+        <p className="text-sm text-muted-foreground">Calculator not found.</p>
+      </div>
+    )
+  }
   const reactId = useId()
 
   const defaults: FormValues = useMemo(() => {
