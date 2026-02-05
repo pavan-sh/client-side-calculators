@@ -5,7 +5,13 @@ import { useId, useMemo, useState } from 'react'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Select } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import type { Field } from '@/lib/calculators/types'
 import { calculatorsBySlug } from '@/lib/calculators/registry'
 
@@ -27,20 +33,36 @@ function FieldControl({
   disabled?: boolean
 }) {
   if (field.type === 'select') {
+    const currentValue = value ?? field.options[0]?.value ?? ''
+
     return (
-      <Select
+      <Select value={currentValue} onValueChange={onChange} disabled={disabled}>
+        <SelectTrigger id={id} aria-describedby={describedBy}>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {field.options.map((o) => (
+            <SelectItem key={o.value} value={o.value}>
+              {o.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    )
+  }
+
+  if (field.type === 'date') {
+    return (
+      <Input
         id={id}
         aria-describedby={describedBy}
-        value={value ?? field.options[0]?.value ?? ''}
+        type="date"
+        value={value ?? ''}
+        min={field.min}
+        max={field.max}
         onChange={(e) => onChange(e.target.value)}
         disabled={disabled}
-      >
-        {field.options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </Select>
+      />
     )
   }
 
@@ -70,16 +92,10 @@ function isHiddenByUnit(calcId: string, unit: string | undefined, fieldKey: stri
 
 export function CalculatorPage({ slug }: { slug: string }) {
   const calc = calculatorsBySlug[slug]
-  if (!calc) {
-    return (
-      <div className="mx-auto max-w-3xl">
-        <p className="text-sm text-muted-foreground">Calculator not found.</p>
-      </div>
-    )
-  }
   const reactId = useId()
 
   const defaults: FormValues = useMemo(() => {
+    if (!calc) return {}
     const d: FormValues = {}
     for (const f of calc.fields) {
       if (f.type === 'select') d[f.key] = f.options[0]?.value
@@ -89,7 +105,9 @@ export function CalculatorPage({ slug }: { slug: string }) {
 
   const [values, setValues] = useState<FormValues>(defaults)
 
+
   const parsed = useMemo(() => {
+    if (!calc) return { ok: false as const, error: new Error('Calculator not found') }
     try {
       return { ok: true as const, value: calc.schema.parse(values) }
     } catch (e) {
@@ -98,9 +116,18 @@ export function CalculatorPage({ slug }: { slug: string }) {
   }, [calc, values])
 
   const output = useMemo(() => {
+    if (!calc) return null
     if (!parsed.ok) return null
     return calc.compute(parsed.value)
   }, [parsed, calc])
+
+  if (!calc) {
+    return (
+      <div className="mx-auto max-w-3xl">
+        <p className="text-sm text-muted-foreground">Calculator not found.</p>
+      </div>
+    )
+  }
 
   const unit = values.unit
 
@@ -122,9 +149,19 @@ export function CalculatorPage({ slug }: { slug: string }) {
 
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
-          <CardHeader>
-            <CardTitle>Inputs</CardTitle>
-            <CardDescription>Adjust values to update results instantly.</CardDescription>
+          <CardHeader className="flex flex-row items-start justify-between gap-4">
+            <div className="space-y-1">
+              <CardTitle>Inputs</CardTitle>
+              <CardDescription>Adjust values to update results instantly.</CardDescription>
+            </div>
+            <button
+              type="button"
+              className="inline-flex h-9 items-center justify-center rounded-md border bg-background px-3 text-sm font-medium shadow-sm transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background"
+              onClick={() => setValues(defaults)}
+              disabled={Object.keys(values).length === 0}
+            >
+              Clear
+            </button>
           </CardHeader>
           <CardContent className="space-y-4">
             {calc.fields.map((field) => {
